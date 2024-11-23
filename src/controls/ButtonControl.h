@@ -2,6 +2,8 @@
 #define BUTTON_CONTROL_H
 #include <windows.h>
 #include "ControlBase.h"
+#include <CommCtrl.h>
+#include <vector>
 
 class ButtonControl : public ControlBase {
   public:
@@ -14,9 +16,11 @@ class ButtonControl : public ControlBase {
       _In_ LPARAM lParam);
     HWND getHwnd() const override;
     void setOldWndProc(WNDPROC wndProc) override;
+    static void setIpHandle(HWND hwnd);
   private:
     WNDPROC oldWndProc;
     HWND hwnd;
+    static std::vector<HWND> ipHandles;
 };
 
 
