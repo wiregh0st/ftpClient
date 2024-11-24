@@ -51,6 +51,7 @@ ButtonControl* FtpApp::CreateChildButtonControl(_In_ LPCSTR lpWindowName,
     this->handleControlInitErr("Could not init ButtonControl");
     return NULL;
   }
+
   WNDPROC oldWndProc = this->setWndProc(hwndButton, ButtonControl::ButtonControlProc);
   pButtonControl->setOldWndProc(oldWndProc);
   SetWindowLongPtrA(hwndButton, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pButtonControl));
@@ -73,6 +74,7 @@ IpControl* FtpApp::CreateChildIpControl(_In_opt_ LPCSTR lpWindowName,
     this->handleControlInitErr("Could not init IpControl");
     return NULL;
   }
+  ButtonControl::setIpHandle(hwndIp);
   SetPropA(hwndIp, "IpControlInstance", reinterpret_cast<HANDLE>(pIpControl));
   WNDPROC oldWndProc = this->setWndProc(hwndIp, IpControl::IpControlProc);
   pIpControl->setOldWndProc(oldWndProc);
@@ -107,8 +109,6 @@ LRESULT CALLBACK FtpApp::WndProc(
 {
   switch (uMsg)
   {
-
-    
     case WM_CLOSE:
     {
       if (MessageBox(hwnd, "Are you sure you want to exit?", "Exit", MB_OKCANCEL) == IDOK) {
@@ -116,28 +116,28 @@ LRESULT CALLBACK FtpApp::WndProc(
       }
       return 0;
     }
-    case WM_COMMAND: 
+    case WM_COMMAND:
     {
       switch (HIWORD(wParam)) {
-        case BN_CLICKED: 
+        case BN_CLICKED:
         {
           ButtonControl::ButtonControlProc(reinterpret_cast<HWND>(lParam), uMsg, wParam, lParam);
           break;
         }
-        default: 
+        default:
         {
           break;
         }
       }
-   /*   switch (HIWORD(wParam)) 
-      {
-        auto t = HIWORD(wParam);
-        auto c = 0;
-        if (HIWORD(wParam) == BN_CLICKED) {
-          ;
-        }
-        break;
-      }*/
+      /*   switch (HIWORD(wParam))
+         {
+           auto t = HIWORD(wParam);
+           auto c = 0;
+           if (HIWORD(wParam) == BN_CLICKED) {
+             ;
+           }
+           break;
+         }*/
       break;
     }
     case WM_DESTROY:
@@ -160,13 +160,12 @@ LRESULT CALLBACK FtpApp::WndProc(
       EndPaint(hwnd, &ps);
       return 0;
     }
-    case WM_CTLCOLORSTATIC: 
+    case WM_CTLCOLORSTATIC:
     {
       HDC hdcStatic = (HDC)wParam;
       SetBkColor(hdcStatic, RGB(255, 255, 255));
       return (LRESULT)GetSysColorBrush(COLOR_WINDOW);
     }
-    default:
-      return DefWindowProcA(hwnd, uMsg, wParam, lParam);
-    }
+  }
+    return DefWindowProcA(hwnd, uMsg, wParam, lParam);
 }
