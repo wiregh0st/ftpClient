@@ -1,10 +1,9 @@
 #include "ButtonControl.h"
+#include "../FtpApp.h"
 
 ButtonControl::ButtonControl(HWND hwnd) : hwnd(hwnd), oldWndProc(NULL) {}
 
 ButtonControl::~ButtonControl() {}
-
-std::vector<HWND> ButtonControl::ipHandles;
 
 LRESULT CALLBACK ButtonControl::ButtonControlProc(_In_ HWND hwnd,
   _In_ UINT   uMsg,
@@ -14,7 +13,8 @@ LRESULT CALLBACK ButtonControl::ButtonControlProc(_In_ HWND hwnd,
   if (pButtonControl) {
     switch (uMsg)
     {
-      case WM_COMMAND: {
+      case WM_COMMAND: 
+      {
         int notificationCode = HIWORD(wParam);
         switch (notificationCode) {
           case BN_CLICKED:
@@ -27,7 +27,7 @@ LRESULT CALLBACK ButtonControl::ButtonControlProc(_In_ HWND hwnd,
               auto t = 0;
             }
             if (strcmp(buttonTextBuff, "Reset") == 0) {
-              for (HWND ipHwnd : ipHandles) {
+              for (HWND ipHwnd : FtpApp::getIpHandles()) {
                 SendMessageA(ipHwnd, IPM_CLEARADDRESS, NULL, NULL);
               }
               auto t = 0;
@@ -59,10 +59,6 @@ LRESULT CALLBACK ButtonControl::ButtonControlProc(_In_ HWND hwnd,
 
 HWND ButtonControl::getHwnd() const {
   return hwnd;
-}
-
-void ButtonControl::setIpHandle(HWND hwnd) {
-  ipHandles.push_back(hwnd);
 }
 
 void ButtonControl::setOldWndProc(WNDPROC wndProc) {

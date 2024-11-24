@@ -42,9 +42,11 @@ class FtpApp {
     ) const;
     WNDPROC setWndProc(HWND hwnd, WNDPROC controlProc) const;
     BOOL InitIpControl() const;
-
+    static void setIpHandle(HWND hwnd);
+    static std::vector<HWND> getIpHandles();
     void handleControlInitErr(LPCSTR error) const;
   private:
+    static std::vector<HWND> ipHandles;
     WNDCLASSA wc;
     HWND hwnd;
     INITCOMMONCONTROLSEX ipControlInit;

@@ -16,11 +16,9 @@ class ButtonControl : public ControlBase {
       _In_ LPARAM lParam);
     HWND getHwnd() const override;
     void setOldWndProc(WNDPROC wndProc) override;
-    static void setIpHandle(HWND hwnd);
   private:
     WNDPROC oldWndProc;
     HWND hwnd;
-    static std::vector<HWND> ipHandles;
 };
 
 

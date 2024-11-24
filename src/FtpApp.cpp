@@ -11,6 +11,8 @@ FtpApp::FtpApp() : hwnd(NULL), wc({}), ipControlInit( {sizeof(ipControlInit), IC
 
 FtpApp::~FtpApp() {}
 
+std::vector<HWND> FtpApp::ipHandles;
+
 void FtpApp::CreateAppWindow(_In_ LPCSTR lpClassName,
   _In_opt_ LPCSTR lpWindowName,
   _In_ DWORD dWindowStyle,
@@ -74,7 +76,7 @@ IpControl* FtpApp::CreateChildIpControl(_In_opt_ LPCSTR lpWindowName,
     this->handleControlInitErr("Could not init IpControl");
     return NULL;
   }
-  ButtonControl::setIpHandle(hwndIp);
+  FtpApp::setIpHandle(hwndIp);
   SetPropA(hwndIp, "IpControlInstance", reinterpret_cast<HANDLE>(pIpControl));
   WNDPROC oldWndProc = this->setWndProc(hwndIp, IpControl::IpControlProc);
   pIpControl->setOldWndProc(oldWndProc);
@@ -95,6 +97,14 @@ int FtpApp::getAppXWidth() const {
 
 int FtpApp::getAppYHeight() const {
   return this->APP_Y_HEIGHT;
+}
+
+std::vector<HWND> FtpApp::getIpHandles() {
+  return ipHandles;
+}
+
+void FtpApp::setIpHandle(HWND hwnd) {
+  ipHandles.push_back(hwnd);
 }
 
 WNDPROC FtpApp::setWndProc(HWND hwnd, WNDPROC newWndProc) const {
