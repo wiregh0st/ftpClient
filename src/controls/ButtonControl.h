@@ -2,6 +2,8 @@
 #define BUTTON_CONTROL_H
 #include <windows.h>
 #include "ControlBase.h"
+#include <CommCtrl.h>
+#include <vector>
 
 class ButtonControl : public ControlBase {
   public:

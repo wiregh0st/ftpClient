@@ -1,20 +1,20 @@
 #include "ButtonControl.h"
+#include "../FtpApp.h"
 
 ButtonControl::ButtonControl(HWND hwnd) : hwnd(hwnd), oldWndProc(NULL) {}
 
 ButtonControl::~ButtonControl() {}
-
 
 LRESULT CALLBACK ButtonControl::ButtonControlProc(_In_ HWND hwnd,
   _In_ UINT   uMsg,
   _In_ WPARAM wParam,
   _In_ LPARAM lParam) {
   ButtonControl* pButtonControl = reinterpret_cast<ButtonControl*>(GetWindowLongPtrA(hwnd, GWLP_USERDATA));
-  //need button id?
   if (pButtonControl) {
     switch (uMsg)
     {
-      case WM_COMMAND: {
+      case WM_COMMAND: 
+      {
         int notificationCode = HIWORD(wParam);
         switch (notificationCode) {
           case BN_CLICKED:
@@ -22,12 +22,14 @@ LRESULT CALLBACK ButtonControl::ButtonControlProc(_In_ HWND hwnd,
             HWND hwndButton = reinterpret_cast<HWND>(lParam);
             char buttonTextBuff[256];
             GetWindowTextA(hwndButton, buttonTextBuff, sizeof(buttonTextBuff));
+            //TODO: define the button text as constants
             if (strcmp(buttonTextBuff, "Initiate Transfer") == 0) {
               auto t = 0;
             }
-            //TODO: get child ip windows here. need to send IPM_CLEARADDRESS message to these windows.
             if (strcmp(buttonTextBuff, "Reset") == 0) {
-              SendMessageA();
+              for (HWND ipHwnd : FtpApp::getIpHandles()) {
+                SendMessageA(ipHwnd, IPM_CLEARADDRESS, NULL, NULL);
+              }
               auto t = 0;
             }
             break;
@@ -35,18 +37,6 @@ LRESULT CALLBACK ButtonControl::ButtonControlProc(_In_ HWND hwnd,
         }
         break;
       }
-     /* case BN_CLICKED:
-      {
-        char buttonText[256];
-        GetWindowTextA(hwnd, buttonText, sizeof(buttonText));
-        if (buttonText == "Initiate Transfer") {
-          auto t = 0;
-        }
-        if (buttonText == "Reset") {
-          auto t = 0;
-        }
-        break;
-      }*/
       //before child window destroy
       case WM_DESTROY:
       {
