@@ -24,13 +24,14 @@ LRESULT CALLBACK ButtonControl::ButtonControlProc(_In_ HWND hwnd,
             GetWindowTextA(hwndButton, buttonTextBuff, sizeof(buttonTextBuff));
             //TODO: define the button text as constants
             if (strcmp(buttonTextBuff, "Initiate Transfer") == 0) {
-              auto t = 0;
+              HWND ipControlHwnd = FtpApp::getIpControlHwnd();
+              DWORD ipAddress = 0;
+              SendMessageA(ipControlHwnd, IPM_GETADDRESS, NULL, (LPARAM)&ipAddress);
+              return ipAddress;
             }
+
             if (strcmp(buttonTextBuff, "Reset") == 0) {
-              for (HWND ipHwnd : FtpApp::getIpHandles()) {
-                SendMessageA(ipHwnd, IPM_CLEARADDRESS, NULL, NULL);
-              }
-              auto t = 0;
+                SendMessageA(FtpApp::getIpControlHwnd(), IPM_CLEARADDRESS, NULL, NULL);
             }
             break;
           }
@@ -53,6 +54,7 @@ LRESULT CALLBACK ButtonControl::ButtonControlProc(_In_ HWND hwnd,
         return CallWindowProcA(pButtonControl->oldWndProc, hwnd, uMsg, wParam, lParam);
       }
     }
+    return 0;
   }
   return DefWindowProcA(hwnd, uMsg, wParam, lParam);
 }

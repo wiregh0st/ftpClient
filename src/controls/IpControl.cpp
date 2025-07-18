@@ -2,7 +2,6 @@
 #include <cstdio>
 
 
-//TODO: rename all this shit to ipaddress
 IpControl::IpControl(HWND hwnd) : hwnd(hwnd), oldWndProc(NULL) {
   char buffer[256];
   sprintf(buffer, "IpControl instance created");

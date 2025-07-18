@@ -7,7 +7,7 @@
 #include "controls/IpControl.h"
 #include "controls/ButtonControl.h"
 
-
+//TODO: need to lock file before reading
 //TODO: handle errors.. more elegantly
 
 int WINAPI WinMain(
@@ -44,14 +44,6 @@ int WINAPI WinMain(
     OutputDebugStringA(oss.str().c_str());
     return 1;
   }
-
-  IpControl* pIpTo = app.CreateChildIpControl(
-    "Enter IP address to transfer from:",
-    WS_CHILD | WS_VISIBLE | WS_BORDER,
-    50, 50, 200, 25,
-    hInstance,
-    NULL
-    );
 
   IpControl* pIpFrom = app.CreateChildIpControl(
     "Enter IP address to transfer to:",
